@@ -8,4 +8,9 @@ public class Enemy
         enemy.setHP();
     }
 
+
+    public void setHP(int HP)
+    {
+        this.HP = HP;
+    }
 }
