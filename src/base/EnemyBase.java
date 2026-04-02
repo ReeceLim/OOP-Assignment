@@ -1,13 +1,9 @@
-public class Enemy 
+package base;
+
+public class EnemyBase 
 {
     private int HP;
     private int dmg;
-
-    public void Atk(Enemy enemy, int Atk)
-    {
-        enemy.setHP();
-    }
-
 
     public void setHP(int HP)
     {
