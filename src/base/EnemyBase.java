@@ -1,4 +1,6 @@
-public class Enemy 
+package base
+
+public class EnemyBase 
 {
     private int HP;
     private int dmg;
