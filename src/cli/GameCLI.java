@@ -1,7 +1,7 @@
 package cli;
 public class GameCLI {
-    // to start the game: 
-    public void start() {
+  
+    public void start() {  // to start the game: 
         //1.show welcome message:
         
         //2.ask for user's name
