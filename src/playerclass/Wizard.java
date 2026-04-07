@@ -1,9 +1,9 @@
 package playerclass;
 
-import base.PlayerBase;
+import base.Player;
 import specialskills.ArcaneBlast;
  
-public class Wizard extends PlayerBase {
+public class Wizard extends Player {
     private static final int BASE_HP  = 200;
     private static final int BASE_ATK = 50;
     private static final int BASE_DEF = 10;
