@@ -1,5 +1,8 @@
 package playerclass;
 
-public class Wizard {
+import base.Player;
 
+public class Wizard extends Player
+{
+    
 }

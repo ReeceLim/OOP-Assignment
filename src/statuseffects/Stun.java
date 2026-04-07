@@ -1,7 +1,7 @@
 package statuseffects;
-import base.StatusEffectBase;
+import base.StatusEffect;
 
-public class Stun implements StatusEffectBase
+public class Stun extends StatusEffect
 {
 
 }
