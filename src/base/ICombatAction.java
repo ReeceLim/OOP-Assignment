@@ -9,4 +9,3 @@ public interface ICombatAction
  
     String getDisplayName();
 }
- 
