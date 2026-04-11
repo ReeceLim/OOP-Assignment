@@ -1,55 +1,27 @@
+package managers;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * BattleManager orchestrates the full lifecycle of a battle.
- *
- * Responsibilities (SRP):
- *  - Manage round progression
- *  - Delegate turn ordering to TurnOrderStrategy
- *  - Coordinate each combatant's turn (status effects → action)
- *  - Check win/loss conditions after each action and at end of round
- *  - Trigger backup spawns when the initial enemy wave is fully defeated
- *
- * Depends on abstractions (DIP):
- *  - Combatant  (not Warrior/Goblin directly)
- *  - TurnOrderStrategy (not SpeedBasedTurnOrderStrategy directly)
- *  - BattleUI   (not a concrete CLI class)
- *
- * OCP: adding a new TurnOrderStrategy or Action type requires zero changes here.
- */
+import javax.swing.Action;
+
+import base.*;
+
 public class BattleManager {
 
-    // -----------------------------------------------------------------------
-    // Dependencies (injected via constructor – DIP)
-    // -----------------------------------------------------------------------
     private final Player            player;
-    private final List<Enemy>       activeEnemies;      // enemies currently on the field
-    private final List<Enemy>       backupWave;         // backup enemies waiting to spawn
+    private final List<Combatant>       activeEnemies;      // enemies currently on the field
+    private final List<Combatant>       backupWave;         // backup enemies waiting to spawn
     private final TurnOrderStrategy turnOrderStrategy;
     private final BattleUI          ui;
 
-    // -----------------------------------------------------------------------
-    // State
-    // -----------------------------------------------------------------------
     private int     currentRound;
     private boolean initialWaveDefeated;
     private boolean backupSpawned;
 
-    // -----------------------------------------------------------------------
-    // Constructor
-    // -----------------------------------------------------------------------
-    /**
-     * @param player           the human-controlled player combatant
-     * @param initialEnemies   enemies present at battle start
-     * @param backupWave       enemies that spawn after the initial wave is wiped;
-     *                         pass an empty list if the level has no backup wave
-     * @param turnOrderStrategy strategy used to sort combatants each round
-     * @param ui               the UI boundary responsible for all I/O
-     */
     public BattleManager(Player player,
-                         List<Enemy> initialEnemies,
-                         List<Enemy> backupWave,
+                         List<Combatant> initialEnemies,
+                         List<Combatant> backupWave,
                          TurnOrderStrategy turnOrderStrategy,
                          BattleUI ui) {
         this.player            = player;
@@ -107,7 +79,7 @@ public class BattleManager {
                 // 3. Combatant takes its action
                 if (combatant instanceof Player p) {
                     handlePlayerTurn(p);
-                } else if (combatant instanceof Enemy e) {
+                } else if (combatant instanceof Combatant e) {
                     handleEnemyTurn(e);
                 }
 
@@ -152,7 +124,7 @@ public class BattleManager {
         if (player.isAlive()) {
             all.add(player);
         }
-        for (Enemy e : activeEnemies) {
+        for (Combatant e : activeEnemies) {
             if (e.isAlive()) {
                 all.add(e);
             }
@@ -166,19 +138,19 @@ public class BattleManager {
      * need to know which concrete Action is selected.
      */
     private void handlePlayerTurn(Player p) {
-        List<Enemy> livingEnemies = getLivingEnemies();
-        Action chosenAction = ui.promptPlayerAction(p, livingEnemies);
+        List<Combatant> livingEnemies = getLivingEnemies();
+        Action chosenAction = ui.decidePlayerAction(p, livingEnemies);
         chosenAction.execute(p, livingEnemies, this);
     }
 
     /**
      * Handles an enemy's turn.
      * Enemies always perform BasicAttack in this version.
-     * The EnemyActionStrategy on the Enemy determines the concrete action,
+     * The EnemyActionStrategy on the Combatant determines the concrete action,
      * keeping BattleManager decoupled (OCP / DIP).
      */
-    private void handleEnemyTurn(Enemy e) {
-        Action action = e.decideAction(player);
+    private void handleEnemyTurn(Combatant e) {
+        ICombatAction action = e.decideAction(player);
         action.execute(e, List.of(player), this);
     }
 
@@ -227,7 +199,7 @@ public class BattleManager {
      */
     private void tickRoundEffects() {
         player.tickRoundEffects();
-        for (Enemy e : activeEnemies) {
+        for (Combatant e : activeEnemies) {
             e.tickRoundEffects();
         }
     }

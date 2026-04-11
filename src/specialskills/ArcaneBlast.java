@@ -1,38 +1,33 @@
 package specialskills;
 
-import base.EnemyBase;
-import base.PlayerBase;
-import base.SpecialSkillBase;
+import base.Combatant;
+import base.SpecialSkill;
 
 import java.util.List;
 
-/**
- * Wizard skill: deals BasicAttack damage to ALL enemies.
- * Each enemy killed grants +10 ATK to the Wizard for the rest of the level.
- */
-public class ArcaneBlast extends SpecialSkillBase {
+public class ArcaneBlast extends SpecialSkill {
     public ArcaneBlast() {
         super("Arcane Blast");
     }
 
     @Override
-    public void execute(PlayerBase caster, List<EnemyBase> enemies) {
-        List<EnemyBase> alive = enemies.stream().filter(EnemyBase::isAlive).toList();
+    public void execute(Combatant caster, List<Combatant> enemies) {
+        List<Combatant> alive = enemies.stream().filter(Combatant::isAlive).toList();
         if (alive.isEmpty()) return;
 
         System.out.println("Arcane Blast hits all enemies!");
         int kills = 0;
 
-        for (EnemyBase enemy : alive) {
-            int damage = Math.max(0, caster.getAtk() - enemy.getDef());
+        for (Combatant enemy : alive) {
+            int damage = Math.max(0, caster.getAttack() - enemy.getDefense());
             enemy.takeDamage(damage);
-            System.out.printf("  %s takes %d damage (HP: %d).%n", enemy.getName(), damage, enemy.getHP());
+            System.out.printf("  %s takes %d damage (HP: %d).%n", enemy.getName(), damage, enemy.getCurrentHp());
 
             if (!enemy.isAlive()) {
                 kills++;
                 // Grant +10 ATK per kill before applying to next target
-                caster.setAtk(caster.getAtk() + 10);
-                System.out.printf("  %s eliminated! Wizard ATK +10 → %d.%n", enemy.getName(), caster.getAtk());
+                caster.addAttack(10);
+                System.out.printf("  %s eliminated! Wizard ATK +10 → %d.%n", enemy.getName(), caster.getAttack());
             }
         }
 

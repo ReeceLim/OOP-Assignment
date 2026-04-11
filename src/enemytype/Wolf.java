@@ -1,8 +1,8 @@
 package enemytype;
 
-import base.EnemyBase;
+import base.Enemy;
 
-public class Wolf extends EnemyBase {
+public class Wolf extends Enemy {
     private static final int BASE_HP  = 40;
     private static final int BASE_ATK = 45;
     private static final int BASE_DEF = 5;

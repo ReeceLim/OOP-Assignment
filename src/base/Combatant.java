@@ -12,9 +12,7 @@ public abstract class Combatant {
     protected int defense;
     protected final int speed;
     protected boolean alive;
-    // for stun (Status effect)
     private boolean stunned = false;
-    // for smoke bomb (Status Effect)
     private boolean smokeBombActive = false;
 
     private final List<StatusEffect> statusEffects = new ArrayList<>();
@@ -28,6 +26,9 @@ public abstract class Combatant {
         this.speed     = speed;
         this.alive     = true;
     }
+
+    public abstract ICombatAction decideAction(List<Combatant> allies,
+                                               List<Combatant> enemies);
 
     public void takeDamage(int rawDamage) {
         // for smoke bomb (Status Effect) so smoke bomb will come first, if use smoke bomb, 0 damage for the player
@@ -95,7 +96,6 @@ public abstract class Combatant {
         }
         statusEffects.removeAll(toRemove);
     }
-
     
     // Getters
 

@@ -1,13 +1,11 @@
+package turnorderstrategies;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import base.TurnOrderStrategy;
+import base.Combatant;
 
-/**
- * Determines turn order by descending Speed stat.
- * Higher speed acts first. Ties preserve original list order (stable sort).
- *
- * Satisfies the assignment rule: "Higher speed goes first."
- */
 public class SpeedBasedTurnOrderStrategy implements TurnOrderStrategy {
 
     @Override

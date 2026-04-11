@@ -1,19 +1,28 @@
 package items;
 
 import base.Combatant;
-import base.ICombatAction;
+import base.Item;
+
 import java.util.List;
 
-public class PotionItem implements ICombatAction{
+public class PotionItem implements Item{
+    private static final int HEAL_AMOUNT = 100;
+ 
     @Override
-    public void execute(Combatant actor, Combatant target, List<Combatant> allies, List<Combatant> enemies) {
-        int healAmount = 100; // heal 100 HP
-        actor.heal(healAmount);
-        System.out.println(actor.getName() + " used a Potion! HP restored to " + actor.getCurrentHp());
+    public void use(Combatant user, Combatant target,
+                    List<Combatant> allies, List<Combatant> enemies) {
+        int hpBefore = user.getCurrentHp();
+        user.heal(HEAL_AMOUNT);
+        int actualHeal = user.getCurrentHp() - hpBefore;
+ 
+        System.out.printf("  %s used Potion: HP %d → %d (+%d)%s%n",
+                user.getName(),
+                hpBefore,
+                user.getCurrentHp(),
+                actualHeal,
+                actualHeal < HEAL_AMOUNT ? " (capped at max HP)" : "");
     }
-
+ 
     @Override
-    public String getDisplayName() {
-        return "Potion";
-    }
+    public String getName()        { return "Potion"; }
 }
