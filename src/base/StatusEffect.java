@@ -47,4 +47,5 @@ public abstract class StatusEffect
     public String toString(){
         return String.format("%s (%d turns left", name, remainingTurns);
     }
+
 }
