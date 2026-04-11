@@ -5,6 +5,7 @@ import java.util.List;
  * Follows OCP: new ordering strategies can be added without modifying BattleEngine.
  * Follows DIP: BattleEngine depends on this abstraction, not concrete implementations.
  */
+
 public interface TurnOrderStrategy {
 
     /**

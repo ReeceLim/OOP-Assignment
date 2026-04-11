@@ -1,3 +1,8 @@
+package managers;
+ 
+import base.Combatant;
+import base.TurnOrderStrategy;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
