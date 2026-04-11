@@ -1,9 +1,8 @@
 package specialskills;
 
 import base.EnemyBase;
-import base.PlayerBase;
+import base.Player;
 import base.SpecialSkillBase;
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,14 +15,14 @@ public class ShieldBash extends SpecialSkillBase {
     }
 
     @Override
-    public void execute(PlayerBase caster, List<EnemyBase> enemies) {
+    public void execute(Player caster, List<EnemyBase> enemies) {
         // Let player pick a target
         List<EnemyBase> alive = enemies.stream().filter(EnemyBase::isAlive).toList();
         if (alive.isEmpty()) return;
 
         System.out.println("Choose a target for Shield Bash:");
         for (int i = 0; i < alive.size(); i++) {
-            System.out.printf("  [%d] %s (HP: %d)%n", i + 1, alive.get(i).getName(), alive.get(i).getHP());
+            System.out.printf("  [%d] %s (HP: %d)%n", i + 1, alive.get(i).getName(), alive.get(i).getCurrentHp());
         }
 
         Scanner sc = new Scanner(System.in);
@@ -35,9 +34,9 @@ public class ShieldBash extends SpecialSkillBase {
         }
 
         EnemyBase target = alive.get(choice);
-        int damage = Math.max(0, caster.getAtk() - target.getDef());
+        int damage = Math.max(0, caster.getAttack() - target.getDefense());
         target.takeDamage(damage);
-        target.applyStun();
+        target.addStatusEffect(new statuseffects.Stun(2));
 
         System.out.printf("Shield Bash hits %s for %d damage! %s is STUNNED for 2 turns.%n",
                 target.getName(), damage, target.getName());

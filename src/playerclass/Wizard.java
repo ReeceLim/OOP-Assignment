@@ -10,7 +10,7 @@ public class Wizard extends Player {
     private static final int BASE_SPD = 20;
  
     public Wizard() {
-        super(BASE_HP, BASE_ATK, BASE_DEF, BASE_SPD);
+        super("Wizard", BASE_HP, BASE_ATK, BASE_DEF, BASE_SPD);
         this.specialSkill = new ArcaneBlast();
     }
  

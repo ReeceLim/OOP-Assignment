@@ -64,14 +64,14 @@ public class GameCLI {
         System.out.println("  [2] Smoke Bomb");
         System.out.println("  [3] Power Stone");
         for (int i = 1; i <= 2; i++) {
-            System.out.printf("Pick item %d: ", i);
-            int choice = readInt(1, 3);
-            player.addItem(switch (choice) {
-                case 1 -> new Potion();
-                case 2 -> new SmokeBomb();
-                default -> new PowerStone();
-            });
-        }
+        System.out.printf("Pick item %d: ", i);
+        int choice = readInt(1, 3);
+        Item item;
+        if (choice == 1) item = new Potion();
+        else if (choice == 2) item = new SmokeBomb();
+        else item = new PowerStone();
+        player.addItem(item);
+    }
         System.out.print("Items selected: ");
         player.getInventory().forEach(item -> System.out.print(item.getName() + "  "));
         System.out.println();
