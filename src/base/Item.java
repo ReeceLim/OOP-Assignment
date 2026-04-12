@@ -1,10 +1,14 @@
 package base;
-
-import java.util.List;
  
-public interface Item {
-    void use(Combatant user, Combatant target,
-             List<Combatant> allies, List<Combatant> enemies);
+public abstract class Item {
+    protected final String name;
  
-    String getName();
+    public Item(String name) { this.name = name; }
+ 
+    public String getName() { return name; }
+ 
+    public abstract void use(Player user);
+ 
+    @Override
+    public String toString() { return name; }
 }

@@ -1,24 +1,23 @@
 package specialskills;
 
-import base.Combatant;
-import base.SpecialSkill;
-import statuseffects.StunEffect;
-
+import base.EnemyBase;
+import base.Player;
+import base.SpecialSkillBase;
 import java.util.List;
 import java.util.Scanner;
 
 /**
  * Warrior skill: deals BasicAttack damage to a selected enemy and stuns it for 2 turns.
  */
-public class ShieldBash extends SpecialSkill {
+public class ShieldBash extends SpecialSkillBase {
     public ShieldBash() {
         super("Shield Bash");
     }
 
     @Override
-    public void execute(Combatant caster, List<Combatant> enemies) {
+    public void execute(Player caster, List<EnemyBase> enemies) {
         // Let player pick a target
-        List<Combatant> alive = enemies.stream().filter(Combatant::isAlive).toList();
+        List<EnemyBase> alive = enemies.stream().filter(EnemyBase::isAlive).toList();
         if (alive.isEmpty()) return;
 
         System.out.println("Choose a target for Shield Bash:");
@@ -34,10 +33,10 @@ public class ShieldBash extends SpecialSkill {
             catch (NumberFormatException e) { choice = -1; }
         }
 
-        Combatant target = alive.get(choice);
+        EnemyBase target = alive.get(choice);
         int damage = Math.max(0, caster.getAttack() - target.getDefense());
         target.takeDamage(damage);
-        target.addStatusEffect(new StunEffect());
+        target.addStatusEffect(new statuseffects.Stun(2));
 
         System.out.printf("Shield Bash hits %s for %d damage! %s is STUNNED for 2 turns.%n",
                 target.getName(), damage, target.getName());
