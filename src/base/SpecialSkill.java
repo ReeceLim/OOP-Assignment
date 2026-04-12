@@ -11,5 +11,5 @@ public abstract class SpecialSkill {
 
     public String getSkillName() { return skillName; }
 
-    public abstract void execute(Combatant caster, List<Combatant> enemies);
+    public abstract void execute(Player caster, List<Enemy> enemies);
 }

@@ -1,7 +1,7 @@
 package managers;
 
 import base.Combatant;
-import base.EnemyBase;
+import base.Enemy;
 import base.ICombatAction;
 import base.Player;
 import base.TurnOrderStrategy;
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public class BattleManager {
 
     private final Player player;
-    private final List<EnemyBase> activeEnemies;
-    private final List<EnemyBase> backupWave;
+    private final List<Enemy> activeEnemies;
+    private final List<Enemy> backupWave;
     private final TurnOrderStrategy turnOrderStrategy;
     private final cli.GameCLI ui;
 
@@ -56,8 +56,8 @@ public class BattleManager {
                     ICombatAction action = ui.promptPlayerAction(p, getLivingEnemies());
                     List<Combatant> targets = new ArrayList<>(getLivingEnemiesAsCombatants());
                     action.execute(p, targets, this);
-                } else if (combatant instanceof EnemyBase e) {
-                    ICombatAction action = e.decideAction();
+                } else if (combatant instanceof Enemy e) {
+                    ICombatAction action = e.setAction();
                     if (player.isInvulnerable()) {
                         System.out.printf("  %s attacks but Smoke Bomb absorbs all damage!%n", e.getName());
                     } else {
@@ -91,7 +91,7 @@ public class BattleManager {
 
     private void tryTriggerBackupSpawn() {
         if (backupSpawned || backupWave.isEmpty()) return;
-        if (activeEnemies.stream().noneMatch(EnemyBase::isAlive)) {
+        if (activeEnemies.stream().noneMatch(Enemy::isAlive)) {
             activeEnemies.clear();
             activeEnemies.addAll(backupWave);
             backupSpawned = true;
@@ -100,9 +100,9 @@ public class BattleManager {
     }
 
     private void removeDefeatedEnemies() {
-        List<EnemyBase> defeated = activeEnemies.stream()
+        List<Enemy> defeated = activeEnemies.stream()
             .filter(e -> !e.isAlive()).collect(Collectors.toList());
-        for (EnemyBase e : defeated) {
+        for (Enemy e : defeated) {
             ui.displayEnemyDefeated(e);
         }
         activeEnemies.removeIf(e -> !e.isAlive());
@@ -121,12 +121,12 @@ public class BattleManager {
     private List<Combatant> buildCombatantList() {
         List<Combatant> all = new ArrayList<>();
         if (player.isAlive()) all.add(player);
-        activeEnemies.stream().filter(EnemyBase::isAlive).forEach(all::add);
+        activeEnemies.stream().filter(Enemy::isAlive).forEach(all::add);
         return all;
     }
 
-    public List<EnemyBase> getLivingEnemies() {
-        return activeEnemies.stream().filter(EnemyBase::isAlive).collect(Collectors.toList());
+    public List<Enemy> getLivingEnemies() {
+        return activeEnemies.stream().filter(Enemy::isAlive).collect(Collectors.toList());
     }
 
     private List<Combatant> getLivingEnemiesAsCombatants() {

@@ -5,8 +5,8 @@ import base.*;
 import items.*;
 import managers.*;
 import playerclass.*;
+import turnorderstrategies.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -92,7 +92,7 @@ public class GameCLI {
         return new Level(diff);
     }
 
-    public ICombatAction promptPlayerAction(Player player, List<EnemyBase> livingEnemies) {
+    public ICombatAction promptPlayerAction(Player player, List<Enemy> livingEnemies) {
         System.out.println("\n  Your turn! Choose an action:");
         System.out.println("    [1] Basic Attack");
         System.out.println("    [2] Defend");
@@ -148,11 +148,11 @@ public class GameCLI {
         };
     }
 
-    private Combatant pickTarget(List<EnemyBase> enemies) {
+    private Combatant pickTarget(List<Enemy> enemies) {
         if (enemies.size() == 1) return enemies.get(0);
         System.out.println("  Pick a target:");
         for (int i = 0; i < enemies.size(); i++) {
-            EnemyBase e = enemies.get(i);
+            Enemy e = enemies.get(i);
             System.out.printf("    [%d] %s (HP: %d/%d)%n", i + 1,
                 e.getName(), e.getCurrentHp(), e.getMaxHp());
         }
@@ -169,7 +169,7 @@ public class GameCLI {
         return inv.get(readInt(1, inv.size()) - 1);
     }
 
-    public void displayBattleStart(Player player, List<EnemyBase> enemies) {
+    public void displayBattleStart(Player player, List<Enemy> enemies) {
         System.out.println("\n===========================================");
         System.out.println("              BATTLE START");
         System.out.println("===========================================");
@@ -186,7 +186,7 @@ public class GameCLI {
         System.out.printf("%n--- ROUND %d ---%n", round);
     }
 
-    public void displayEndOfRound(int round, Player player, List<EnemyBase> activeEnemies) {
+    public void displayEndOfRound(int round, Player player, List<Enemy> activeEnemies) {
         System.out.printf("%nEnd of Round %d:%n", round);
         System.out.printf("  %s HP: %d/%d", player.getClassName(), player.getCurrentHp(), player.getMaxHp());
         if (!player.getInventory().isEmpty()) {
@@ -204,11 +204,11 @@ public class GameCLI {
         System.out.printf("  %s is STUNNED and skips their turn!%n", c.getName());
     }
 
-    public void displayEnemyDefeated(EnemyBase e) {
+    public void displayEnemyDefeated(Enemy e) {
         System.out.printf("  %s has been ELIMINATED!%n", e.getName());
     }
 
-    public void displayBackupSpawn(List<EnemyBase> backup) {
+    public void displayBackupSpawn(List<Enemy> backup) {
         System.out.println("\n  *** BACKUP ENEMIES ARRIVE! ***");
         backup.forEach(e -> System.out.printf("  %s enters the battle! (HP: %d | ATK: %d | DEF: %d | SPD: %d)%n",
             e.getName(), e.getMaxHp(), e.getAttack(), e.getDefense(), e.getSpeed()));

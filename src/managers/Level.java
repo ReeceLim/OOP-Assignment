@@ -1,6 +1,6 @@
 package managers;
 
-import base.EnemyBase;
+import base.Enemy;
 import enemytype.Goblin;
 import enemytype.Wolf;
 
@@ -19,7 +19,7 @@ public class Level {
 
     public String getDifficultyName() { return difficulty.name(); }
 
-    public List<EnemyBase> loadInitialWave() {
+    public List<Enemy> loadInitialWave() {
         return switch (difficulty) {
             case EASY   -> List.of(new Goblin("Goblin A"), new Goblin("Goblin B"), new Goblin("Goblin C"));
             case MEDIUM -> List.of(new Goblin("Goblin"), new Wolf("Wolf"));
@@ -27,7 +27,7 @@ public class Level {
         };
     }
 
-    public List<EnemyBase> loadBackupWave() {
+    public List<Enemy> loadBackupWave() {
         return switch (difficulty) {
             case EASY   -> new ArrayList<>();
             case MEDIUM -> List.of(new Wolf("Wolf A"), new Wolf("Wolf B"));

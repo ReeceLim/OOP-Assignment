@@ -14,7 +14,7 @@ public class ArcaneBlastEffect extends StatusEffect {
     // activate on kill
     @Override
     public void apply(Combatant target) {
-        target.addAttack(atkBonus); // add 10 to the Wizard's attack
+        target.setAttack(target.getAttack() + atkBonus); // add 10 to the Wizard's attack
         System.out.println(target.getName() + " gains +10 ATK from Arcane Blast!");
     }
 }

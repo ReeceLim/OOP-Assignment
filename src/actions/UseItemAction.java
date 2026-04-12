@@ -1,10 +1,10 @@
 package actions;
 
 import base.Combatant;
-import base.EnemyBase;
 import base.ICombatAction;
 import base.Item;
 import base.Player;
+import base.Enemy;
 import items.PowerStone;
 import managers.BattleManager;
 
@@ -22,9 +22,9 @@ public class UseItemAction implements ICombatAction {
         if (!(actor instanceof Player p)) return;
 
         if (item instanceof PowerStone ps) {
-            List<EnemyBase> living = enemies.stream()
-                .filter(e -> e instanceof EnemyBase && e.isAlive())
-                .map(e -> (EnemyBase) e)
+            List<Enemy> living = enemies.stream()
+                .filter(e -> e instanceof Enemy && e.isAlive())
+                .map(e -> (Enemy) e)
                 .collect(Collectors.toList());
             ps.useWithEnemies(p, living);
         } else {

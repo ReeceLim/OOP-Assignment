@@ -5,7 +5,7 @@ import java.util.List;
 
 public abstract class Player extends Combatant {
 
-    protected SpecialSkillBase specialSkill;
+    protected SpecialSkill specialSkill;
     private int specialCooldown = 0;
     private final List<Item> inventory = new ArrayList<>();
     private final int baseDefense;
@@ -20,7 +20,7 @@ public abstract class Player extends Combatant {
     public List<Item> getInventory()           { return inventory; }
     public void addItem(Item item)             { inventory.add(item); }
     public boolean hasItems()                  { return !inventory.isEmpty(); }
-    public SpecialSkillBase getSpecialSkill()  { return specialSkill; }
+    public SpecialSkill getSpecialSkill()  { return specialSkill; }
     public boolean canUseSpecial()             { return specialCooldown == 0; }
     public int getSpecialCooldown()            { return specialCooldown; }
     public void setSpecialCooldown(int cd)     { specialCooldown = cd; }

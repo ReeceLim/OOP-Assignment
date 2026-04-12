@@ -1,11 +1,10 @@
 package items;
  
-import base.EnemyBase;
+import base.Enemy;
 import base.Item;
 import base.Player;
  
 import java.util.List;
-import java.util.stream.Collectors;
  
 public class PowerStone extends Item {
  
@@ -16,7 +15,7 @@ public class PowerStone extends Item {
         System.out.printf("  %s used Power Stone! Special skill triggers for free (cooldown unchanged).%n", user.getName());
     }
  
-    public void useWithEnemies(Player user, List<EnemyBase> enemies) {
+    public void useWithEnemies(Player user, List<Enemy> enemies) {
         System.out.printf("  %s used Power Stone! Special skill triggers for free.%n", user.getName());
         int currentCooldown = user.getSpecialCooldown();
         user.getSpecialSkill().execute(user, enemies);
