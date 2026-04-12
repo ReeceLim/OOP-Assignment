@@ -1,6 +1,7 @@
 package base;
-
-public class StatusEffectBase
-{
-    
+ 
+public interface StatusEffectBase {
+    void tick();
+    boolean isActive();
+    String getEffectName();
 }
