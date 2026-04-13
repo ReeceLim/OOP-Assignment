@@ -14,4 +14,8 @@ public abstract class Enemy extends Combatant {
         this.action = action;
     }
 
+    public ICombatAction getAction(){
+        return action;
+    }
+
 }

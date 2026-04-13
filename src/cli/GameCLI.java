@@ -69,7 +69,7 @@ public class GameCLI {
         Item item;
         if (choice == 1) item = new Potion();
         else if (choice == 2) item = new SmokeBomb();
-        else item = new PowerStone();
+        else item = new Powerstone();
         player.addItem(item);
     }
         System.out.print("Items selected: ");
@@ -99,15 +99,16 @@ public class GameCLI {
 
         boolean hasItems = player.hasItems();
         boolean canSpecial = player.canUseSpecial();
-        String specialLabel = canSpecial
-            ? "[3] Special Skill (" + player.getSpecialSkill().getSkillName() + ")"
-            : "[3] Special Skill (Cooldown: " + player.getSpecialCooldown() + " turns)";
 
         if (hasItems) {
-            System.out.println("    [3] " + (canSpecial ? "Special Skill (" + player.getSpecialSkill().getSkillName() + ")" : "Special Skill (Cooldown: " + player.getSpecialCooldown() + " turns)"));
+            System.out.println("    [3] " + (canSpecial
+                ? "Special Skill (" + player.getSpecialSkill().getSkillName() + ")"
+                : "Special Skill (Cooldown: " + player.getSpecialCooldown() + " turns)"));
             System.out.println("    [4] Use Item");
         } else {
-            System.out.println("    [3] " + specialLabel);
+            System.out.println("    [3] " + (canSpecial
+                ? "Special Skill (" + player.getSpecialSkill().getSkillName() + ")"
+                : "Special Skill (Cooldown: " + player.getSpecialCooldown() + " turns)"));
         }
 
         int maxOption = hasItems ? 4 : 3;
@@ -116,30 +117,19 @@ public class GameCLI {
         return switch (choice) {
             case 1 -> {
                 Combatant target = pickTarget(livingEnemies);
-                yield new BasicAttack() {
-                    @Override
-                    public void execute(Combatant actor, List<Combatant> enemies, managers.BattleManager manager) {
-                        if (target.isInvulnerable()) {
-                            System.out.printf("  %s attacks %s but Smoke Bomb absorbs all damage!%n",
-                                actor.getName(), target.getName());
-                            return;
-                        }
-                        int dmg = Math.max(0, actor.getAttack() - target.getDefense());
-                        target.takeDamage(dmg);
-                        System.out.printf("  %s attacks %s for %d damage! (HP: %d/%d)%n",
-                            actor.getName(), target.getName(), dmg,
-                            target.getCurrentHp(), target.getMaxHp());
-                    }
-                };
+                yield new PlayerBasicAttack(target);
             }
             case 2 -> new DefendAction();
             case 3 -> {
                 if (!canSpecial) {
                     System.out.println("  Skill on cooldown! Defaulting to Basic Attack.");
                     Combatant target = pickTarget(livingEnemies);
-                    yield new BasicAttack();
+                    yield new PlayerBasicAttack(target);
                 }
-                yield new SpecialSkillAction();
+                Enemy target = livingEnemies.size() == 1
+                    ? livingEnemies.get(0)
+                    : (Enemy) pickTarget(livingEnemies);
+                yield new SpecialSkillAction(target);
             }
             default -> {
                 Item chosen = pickItem(player);

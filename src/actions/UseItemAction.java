@@ -5,7 +5,7 @@ import base.ICombatAction;
 import base.Item;
 import base.Player;
 import base.Enemy;
-import items.PowerStone;
+import items.Powerstone;
 import managers.BattleManager;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class UseItemAction implements ICombatAction {
     public void execute(Combatant actor, List<Combatant> enemies, BattleManager manager) {
         if (!(actor instanceof Player p)) return;
 
-        if (item instanceof PowerStone ps) {
+        if (item instanceof Powerstone ps) {
             List<Enemy> living = enemies.stream()
                 .filter(e -> e instanceof Enemy && e.isAlive())
                 .map(e -> (Enemy) e)
