@@ -11,7 +11,7 @@ public class DefendAction implements ICombatAction {
 
     @Override
     public void execute(Combatant actor, List<Combatant> enemies, BattleManager manager) {
-        actor.addStatusEffect(new DefendEffect());
+        actor.addStatusEffect(new DefendEffect(actor));
         actor.setDefense(actor.getDefense() + 10);
         System.out.printf("  %s defends! DEF +10 for this turn and next. (DEF: %d)%n",
             actor.getName(), actor.getDefense());

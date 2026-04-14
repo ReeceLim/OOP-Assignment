@@ -1,26 +1,25 @@
 package statuseffects;
- 
+
 import base.Combatant;
-import base.StatusEffect;
- 
-public class DefendEffect extends StatusEffect {
-    private static final int BONUS = 10;
- 
-    public DefendEffect() {
-        super("Defend", 2);
+import base.StatusEffectBase;
+
+public class DefendEffect implements StatusEffectBase {
+    private int turnsRemaining = 2;
+    private final Combatant target;
+
+    public DefendEffect(Combatant target) {
+        this.target = target;
     }
- 
+
     @Override
-    public void apply(Combatant target) {
-        System.out.printf("  %s's defense is boosted (+%d DEF for 2 turns).%n",
-                target.getName(), BONUS);
+    public void tick() {
+        if (turnsRemaining > 0) turnsRemaining--;
+        if (turnsRemaining == 0) {
+            target.setDefense(target.getDefense() - 10);
+            System.out.printf("  %s's Defend effect expired. DEF restored.%n", target.getName());
+        }
     }
- 
-    @Override
-    protected void onExpire(Combatant target) {
-        target.setDefense(target.getDefense() - BONUS);
-        System.out.printf("  %s's defense bonus expired (-%d DEF).%n",
-                target.getName(), BONUS);
-    }
+
+    @Override public boolean isActive()     { return turnsRemaining > 0; }
+    @Override public String getEffectName() { return "Defend"; }
 }
- 

@@ -24,9 +24,8 @@ public abstract class Combatant {
         this.alive = true;
     }
 
-    public void takeDamage(int rawDamage) {
-        int effective = Math.max(0, rawDamage - defense);
-        currentHp = Math.max(0, currentHp - effective);
+    public void takeDamage(int damage) {
+        currentHp = Math.max(0, currentHp - damage);
         if (currentHp == 0) alive = false;
     }
 
