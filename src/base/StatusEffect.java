@@ -12,29 +12,21 @@ public abstract class StatusEffect
         this.applied = false;
     }
 
-    /* apply effect to the target combatant
-    this method is called once when the effect starts or on each turn when needed */
     public abstract void apply(Combatant target); 
 
-    /* process the effect for each turn
-    decrements remaining turns
-    if the combatant havent apply the status effect, apply the effect on the target */
     public void tick(Combatant target) {
         if (!applied) {
-            apply(target);  // first application
+            apply(target);
             applied = true;
         }
-        remainingTurns--;   // decrease duration each turn
+        remainingTurns--;
         if (remainingTurns <= 0) {
-            onExpire(target);  // optional: handle cleanup when effect ends
+            onExpire(target);  
         }
     }
 
-    protected void onExpire(Combatant target) {
-        // do nothing. Subclasses can override.
-    }
+    protected void onExpire(Combatant target) {}
 
-    // whether effect has expired, return True if effect expired (i.e. remainingTurns <= 0)
     public boolean isExpired(){
         return remainingTurns <= 0;
     }

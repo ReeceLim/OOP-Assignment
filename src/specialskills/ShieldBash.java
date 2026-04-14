@@ -4,6 +4,7 @@ import base.Player;
 import base.Combatant;
 import base.Enemy;
 import base.SpecialSkill;
+import statuseffects.Stun;
 import java.util.List;
 import java.util.Scanner;
 
@@ -37,7 +38,7 @@ public class ShieldBash extends SpecialSkill {
         Combatant target = alive.get(choice);
         int damage = Math.max(0, caster.getAttack() - target.getDefense());
         target.takeDamage(damage);
-        target.addStatusEffect(new statuseffects.Stun(2));
+        target.addStatusEffect(new Stun());
 
         System.out.printf("Shield Bash hits %s for %d damage! %s is STUNNED for 2 turns.%n",
                 target.getName(), damage, target.getName());

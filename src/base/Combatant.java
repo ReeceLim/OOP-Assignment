@@ -12,7 +12,7 @@ public abstract class Combatant {
     protected int defense;
     protected final int speed;
     protected boolean alive;
-    private final List<StatusEffectBase> statusEffects = new ArrayList<>();
+    private final List<StatusEffect> statusEffects = new ArrayList<>();
 
     public Combatant(String name, int hp, int attack, int defense, int speed) {
         this.name = name;
@@ -34,30 +34,33 @@ public abstract class Combatant {
         currentHp = Math.min(maxHp, currentHp + amount);
     }
 
-    public void addStatusEffect(StatusEffectBase effect) {
+     public void addStatusEffect(StatusEffect effect) {
         statusEffects.add(effect);
     }
 
     public void tickStatusEffects() {
-        for (StatusEffectBase e : List.copyOf(statusEffects)) {
-            e.tick();
+        for (StatusEffect e : List.copyOf(statusEffects)) {
+            e.tick(this);
         }
-        statusEffects.removeIf(e -> !e.isActive());
+        statusEffects.removeIf(StatusEffect::isExpired);
     }
-
+ 
     public boolean isStunned() {
-        return statusEffects.stream().anyMatch(e -> e.getEffectName().equals("Stun") && e.isActive());
+        return statusEffects.stream()
+            .anyMatch(e -> e.getName().equals("Stun") && !e.isExpired());
     }
-
+ 
     public boolean isInvulnerable() {
-        return statusEffects.stream().anyMatch(e -> e.getEffectName().equals("SmokeBomb") && e.isActive());
+        return statusEffects.stream()
+            .anyMatch(e -> e.getName().equals("SmokeBomb") && !e.isExpired());
     }
-
+ 
     public boolean isDefending() {
-        return statusEffects.stream().anyMatch(e -> e.getEffectName().equals("Defend") && e.isActive());
+        return statusEffects.stream()
+            .anyMatch(e -> e.getName().equals("Defend") && !e.isExpired());
     }
-
-    public List<StatusEffectBase> getStatusEffects() { return List.copyOf(statusEffects); }
+ 
+    public List<StatusEffect> getStatusEffects() { return List.copyOf(statusEffects); }
 
     public String getName()       { return name; }
     public int getMaxHp()         { return maxHp; }
