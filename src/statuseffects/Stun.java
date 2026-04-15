@@ -22,6 +22,7 @@ public class Stun implements StatusEffectBase {
     @Override
     public String getEffectName() { return "Stun"; }
  
+    @Override 
     public int getTurnsRemaining() { return turnsRemaining; }
 }
 

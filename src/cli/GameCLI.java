@@ -6,13 +6,14 @@ import items.*;
 import managers.*;
 import playerclass.*;
 import turnorderstrategies.*;
+import ui.BattleUI;
 
 import java.util.List;
 import java.util.Scanner;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GameCLI {
+public class GameCLI implements BattleUI {
 
     private final Scanner sc = new Scanner(System.in);
 
@@ -186,11 +187,16 @@ public class GameCLI {
         System.out.printf("  %s HP: %d/%d", player.getClassName(), player.getCurrentHp(), player.getMaxHp());
         System.out.print(" | Items: ");
         Map<String, Long> itemCounts = player.getInventory().stream().collect(Collectors.groupingBy(Item::getName, Collectors.counting()));
-        if (itemCounts.isEmpty()) {
+        boolean hasSmokeActive = player.getStatusEffects().stream().anyMatch(e -> e.getEffectName().equals("SmokeBomb"));
+        if (itemCounts.isEmpty() && !hasSmokeActive) {
             System.out.print("None");
         } else {
             itemCounts.forEach((name, count) -> System.out.print(name + ": " + count + " "));
+            if (hasSmokeActive && !itemCounts.containsKey("Smoke Bomb")) {
+                System.out.print("Smoke Bomb: 0 <- consumed");
+            }
         }
+        player.getStatusEffects().stream().filter(e -> e.getEffectName().equals("SmokeBomb")).findFirst().ifPresent(e -> System.out.printf(" | Effect: %d turn(s) remaining", e.getTurnsRemaining()));
         System.out.printf(" | Cooldown: %s%n",
             player.canUseSpecial() ? "Ready" : player.getSpecialCooldown() + " turns");
         activeEnemies.forEach(e -> System.out.printf("  %s HP: %d/%d%s%n",
