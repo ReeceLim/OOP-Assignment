@@ -39,24 +39,24 @@ public abstract class Combatant {
 
     public void tickStatusEffects() {
         for (StatusEffect e : List.copyOf(statusEffects)) {
-            e.tick(this);
+            e.tick();
         }
-        statusEffects.removeIf(StatusEffect::isExpired);
+        statusEffects.removeIf(e -> !e.isActive());
     }
  
     public boolean isStunned() {
         return statusEffects.stream()
-            .anyMatch(e -> e.getName().equals("Stun") && !e.isExpired());
+            .anyMatch(e -> e.getEffectName().equals("Stun") && e.isActive());
     }
  
     public boolean isInvulnerable() {
         return statusEffects.stream()
-            .anyMatch(e -> e.getName().equals("SmokeBomb") && !e.isExpired());
+            .anyMatch(e -> e.getEffectName().equals("SmokeBomb") && e.isActive());
     }
  
     public boolean isDefending() {
         return statusEffects.stream()
-            .anyMatch(e -> e.getName().equals("Defend") && !e.isExpired());
+            .anyMatch(e -> e.getEffectName().equals("Defend") && e.isActive());
     }
  
     public List<StatusEffect> getStatusEffects() { return List.copyOf(statusEffects); }
