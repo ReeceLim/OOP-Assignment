@@ -6,11 +6,15 @@ import items.*;
 import managers.*;
 import playerclass.*;
 import turnorderstrategies.*;
+import ui.BattleUI;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public class GameCLI {
+// make GameCLI implement BattleUI
+public class GameCLI implements BattleUI {
 
     private final Scanner sc = new Scanner(System.in);
 
@@ -69,7 +73,7 @@ public class GameCLI {
         Item item;
         if (choice == 1) item = new Potion();
         else if (choice == 2) item = new SmokeBomb();
-        else item = new PowerStone();
+        else item = new Powerstone();
         player.addItem(item);
     }
         System.out.print("Items selected: ");
@@ -99,15 +103,16 @@ public class GameCLI {
 
         boolean hasItems = player.hasItems();
         boolean canSpecial = player.canUseSpecial();
-        String specialLabel = canSpecial
-            ? "[3] Special Skill (" + player.getSpecialSkill().getSkillName() + ")"
-            : "[3] Special Skill (Cooldown: " + player.getSpecialCooldown() + " turns)";
 
         if (hasItems) {
-            System.out.println("    [3] " + (canSpecial ? "Special Skill (" + player.getSpecialSkill().getSkillName() + ")" : "Special Skill (Cooldown: " + player.getSpecialCooldown() + " turns)"));
+            System.out.println("    [3] " + (canSpecial
+                ? "Special Skill (" + player.getSpecialSkill().getSkillName() + ")"
+                : "Special Skill (Cooldown: " + player.getSpecialCooldown() + " turns)"));
             System.out.println("    [4] Use Item");
         } else {
-            System.out.println("    [3] " + specialLabel);
+            System.out.println("    [3] " + (canSpecial
+                ? "Special Skill (" + player.getSpecialSkill().getSkillName() + ")"
+                : "Special Skill (Cooldown: " + player.getSpecialCooldown() + " turns)"));
         }
 
         int maxOption = hasItems ? 4 : 3;
@@ -116,30 +121,22 @@ public class GameCLI {
         return switch (choice) {
             case 1 -> {
                 Combatant target = pickTarget(livingEnemies);
-                yield new BasicAttack() {
-                    @Override
-                    public void execute(Combatant actor, List<Combatant> enemies, managers.BattleManager manager) {
-                        if (target.isInvulnerable()) {
-                            System.out.printf("  %s attacks %s but Smoke Bomb absorbs all damage!%n",
-                                actor.getName(), target.getName());
-                            return;
-                        }
-                        int dmg = Math.max(0, actor.getAttack() - target.getDefense());
-                        target.takeDamage(dmg);
-                        System.out.printf("  %s attacks %s for %d damage! (HP: %d/%d)%n",
-                            actor.getName(), target.getName(), dmg,
-                            target.getCurrentHp(), target.getMaxHp());
-                    }
-                };
+                yield new PlayerBasicAttack(target);
             }
             case 2 -> new DefendAction();
             case 3 -> {
                 if (!canSpecial) {
                     System.out.println("  Skill on cooldown! Defaulting to Basic Attack.");
                     Combatant target = pickTarget(livingEnemies);
-                    yield new BasicAttack();
+                    yield new PlayerBasicAttack(target);
                 }
-                yield new SpecialSkillAction();
+                if (player.getSpecialSkill().requiresTarget()) {
+                    Enemy target = livingEnemies.size() == 1
+                        ? livingEnemies.get(0)
+                        : (Enemy) pickTarget(livingEnemies);
+                    yield new SpecialSkillAction(target);
+                }
+                yield new SpecialSkillAction(null);
             }
             default -> {
                 Item chosen = pickItem(player);
@@ -189,10 +186,18 @@ public class GameCLI {
     public void displayEndOfRound(int round, Player player, List<Enemy> activeEnemies) {
         System.out.printf("%nEnd of Round %d:%n", round);
         System.out.printf("  %s HP: %d/%d", player.getClassName(), player.getCurrentHp(), player.getMaxHp());
-        if (!player.getInventory().isEmpty()) {
-            System.out.print(" | Items: ");
-            player.getInventory().forEach(i -> System.out.print(i.getName() + " "));
+        System.out.print(" | Items: ");
+        Map<String, Long> itemCounts = player.getInventory().stream().collect(Collectors.groupingBy(Item::getName, Collectors.counting()));
+        boolean hasSmokeActive = player.getStatusEffects().stream().anyMatch(e -> e.getEffectName().equals("SmokeBomb"));
+        if (itemCounts.isEmpty() && !hasSmokeActive) {
+            System.out.print("None");
+        } else {
+            itemCounts.forEach((name, count) -> System.out.print(name + ": " + count + " "));
+            if (hasSmokeActive && !itemCounts.containsKey("Smoke Bomb")) {
+                System.out.print("Smoke Bomb: 0 <- consumed");
+            }
         }
+        player.getStatusEffects().stream().filter(e -> e.getEffectName().equals("SmokeBomb")).findFirst().ifPresent(e -> System.out.printf(" | Effect: %d turn(s) remaining", e.getTurnsRemaining()));
         System.out.printf(" | Cooldown: %s%n",
             player.canUseSpecial() ? "Ready" : player.getSpecialCooldown() + " turns");
         activeEnemies.forEach(e -> System.out.printf("  %s HP: %d/%d%s%n",

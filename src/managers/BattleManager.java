@@ -5,7 +5,6 @@ import base.Enemy;
 import base.ICombatAction;
 import base.Player;
 import base.TurnOrderStrategy;
-import statuseffects.DefendEffect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +16,12 @@ public class BattleManager {
     private final List<Enemy> activeEnemies;
     private final List<Enemy> backupWave;
     private final TurnOrderStrategy turnOrderStrategy;
-    private final cli.GameCLI ui;
+    private final ui.BattleUI ui;
 
     private int currentRound = 0;
     private boolean backupSpawned = false;
 
-    public BattleManager(Player player, Level level, TurnOrderStrategy strategy, cli.GameCLI ui) {
+    public BattleManager(Player player, Level level, TurnOrderStrategy strategy, ui.BattleUI ui) {
         this.player = player;
         this.activeEnemies = new ArrayList<>(level.loadInitialWave());
         this.backupWave = new ArrayList<>(level.loadBackupWave());
@@ -42,13 +41,13 @@ public class BattleManager {
             for (Combatant combatant : turnOrder) {
                 if (!combatant.isAlive()) continue;
 
-                combatant.tickStatusEffects();
-                expireDefendIfNeeded(combatant);
-
                 if (combatant.isStunned()) {
                     ui.displayStunnedSkip(combatant);
+                    combatant.tickStatusEffects();
                     continue;
                 }
+
+                combatant.tickStatusEffects();
 
                 if (!combatant.isAlive()) continue;
 
@@ -57,7 +56,7 @@ public class BattleManager {
                     List<Combatant> targets = new ArrayList<>(getLivingEnemiesAsCombatants());
                     action.execute(p, targets, this);
                 } else if (combatant instanceof Enemy e) {
-                    ICombatAction action = e.setAction();
+                    ICombatAction action = e.getAction();
                     if (player.isInvulnerable()) {
                         System.out.printf("  %s attacks but Smoke Bomb absorbs all damage!%n", e.getName());
                     } else {
@@ -74,20 +73,15 @@ public class BattleManager {
                 }
             }
 
+            ui.displayEndOfRound(currentRound, player, activeEnemies);
             player.tickCooldown();
             tryTriggerBackupSpawn();
-            ui.displayEndOfRound(currentRound, player, activeEnemies);
 
             BattleResult result = checkEnd();
             if (result != null) return result;
         }
     }
 
-    private void expireDefendIfNeeded(Combatant c) {
-        c.getStatusEffects().stream()
-            .filter(e -> e.getEffectName().equals("Defend") && !e.isActive())
-            .forEach(e -> c.setDefense(c.getDefense() - 10));
-    }
 
     private void tryTriggerBackupSpawn() {
         if (backupSpawned || backupWave.isEmpty()) return;

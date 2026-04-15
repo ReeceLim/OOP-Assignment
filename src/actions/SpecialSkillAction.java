@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SpecialSkillAction implements ICombatAction {
+    private final Enemy target;
+
+    public SpecialSkillAction(Enemy target) { this.target = target; }
 
     @Override
     public void execute(Combatant actor, List<Combatant> enemies, BattleManager manager) {
@@ -18,6 +21,12 @@ public class SpecialSkillAction implements ICombatAction {
             .filter(e -> e instanceof Enemy && e.isAlive())
             .map(e -> (Enemy) e)
             .collect(Collectors.toList());
+        // Put selected target first so ShieldBash hits it; ArcaneBlast hits all anyway
+        if (target != null) {
+            living.remove(target);
+            living.add(0, target);
+        }
+        
         p.getSpecialSkill().execute(p, living);
         p.setSpecialCooldown(3);
     }

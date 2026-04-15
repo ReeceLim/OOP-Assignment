@@ -3,6 +3,7 @@ package specialskills;
 import base.Player;
 import base.Enemy;
 import base.SpecialSkill;
+
 import java.util.List;
 
 /**
@@ -16,25 +17,22 @@ public class ArcaneBlast extends SpecialSkill {
 
     @Override
     public void execute(Player caster, List<Enemy> enemies) {
-        List<Enemy> alive = enemies.stream().filter(Enemy::isAlive).toList();
+        List<Enemy> alive = enemies.stream()
+            .filter(Enemy::isAlive)
+            .toList();
         if (alive.isEmpty()) return;
 
-        System.out.println("Arcane Blast hits all enemies!");
-        int kills = 0;
-
+        System.out.println("  Arcane Blast hits all enemies!");
         for (Enemy enemy : alive) {
             int damage = Math.max(0, caster.getAttack() - enemy.getDefense());
             enemy.takeDamage(damage);
-            System.out.printf("  %s takes %d damage (HP: %d).%n", enemy.getName(), damage, enemy.getCurrentHp());
-
+            System.out.printf("  %s takes %d damage (HP: %d/%d).%n",
+                enemy.getName(), damage, enemy.getCurrentHp(), enemy.getMaxHp());
             if (!enemy.isAlive()) {
-                kills++;
-                // Grant +10 ATK per kill before applying to next target
                 caster.setAttack(caster.getAttack() + 10);
-                System.out.printf("  %s eliminated! Wizard ATK +10 → %d.%n", enemy.getName(), caster.getAttack());
+                System.out.printf("  %s eliminated! Wizard ATK +10 -> %d.%n",
+                    enemy.getName(), caster.getAttack());
             }
         }
-
-        if (kills == 0) System.out.println("No enemies defeated.");
     }
 }

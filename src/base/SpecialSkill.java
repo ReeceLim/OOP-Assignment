@@ -10,6 +10,7 @@ public abstract class SpecialSkill {
     }
 
     public String getSkillName() { return skillName; }
+    public boolean requiresTarget() { return false; }
 
     public abstract void execute(Player caster, List<Enemy> enemies);
 }

@@ -1,32 +1,28 @@
 package ui;
 
+import base.Combatant;
+import base.Enemy;
+import base.ICombatAction;
+import base.Player;
+import managers.BattleResult;
+
 import java.util.List;
-import base.*;
 
-public interface BattleUI
-{
-    /* 
-     * Player action method
-    */
-    ICombatAction decidePlayerAction(Combatant player, List<Combatant> enemies);
-    
-    /* 
-     * Prompt player to select target
-    */
-    Combatant promptTargetSelection(Combatant actor, List<Combatant> targets);
+public interface BattleUI {
 
-    /*
-     * Display the state of all combatants at the end of a round.
-    */
-    void displayRoundSummary(int roundNumber, List<Combatant> players, List<Combatant> enemies);
+    void displayBattleStart(Player player, List<Enemy> enemies);
 
-    void displayRoundHeader(int roundNumber);
+    void displayRoundHeader(int round);
 
-    void displayMessage(String message);
+    void displayEndOfRound(int round, Player player, List<Enemy> activeEnemies);
 
-    void displayVictory(int remainingHp, int maxHp, int totalRounds);
+    void displayStunnedSkip(Combatant combatant);
 
-    void displayDefeat(int enemiesRemaining, int totalRounds);
+    void displayEnemyDefeated(Enemy enemy);
 
-    int promptPostGameChoice();
+    void displayBackupSpawn(List<Enemy> backup);
+
+    void displayResult(BattleResult result, Player player);
+
+    ICombatAction promptPlayerAction(Player player, List<Enemy> livingEnemies);
 }

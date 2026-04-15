@@ -1,8 +1,8 @@
 package statuseffects;
-import base.StatusEffectBase;
+import base.StatusEffect;
 
 /** Prevents the affected entity from taking actions for a set number of turns. */
-public class Stun implements StatusEffectBase {
+public class Stun implements StatusEffect {
     private int turnsRemaining;
  
     public Stun(int duration) {
@@ -22,6 +22,7 @@ public class Stun implements StatusEffectBase {
     @Override
     public String getEffectName() { return "Stun"; }
  
+    @Override 
     public int getTurnsRemaining() { return turnsRemaining; }
 }
 

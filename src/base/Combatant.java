@@ -12,7 +12,7 @@ public abstract class Combatant {
     protected int defense;
     protected final int speed;
     protected boolean alive;
-    private final List<StatusEffectBase> statusEffects = new ArrayList<>();
+    private final List<StatusEffect> statusEffects = new ArrayList<>();
 
     public Combatant(String name, int hp, int attack, int defense, int speed) {
         this.name = name;
@@ -24,9 +24,8 @@ public abstract class Combatant {
         this.alive = true;
     }
 
-    public void takeDamage(int rawDamage) {
-        int effective = Math.max(0, rawDamage - defense);
-        currentHp = Math.max(0, currentHp - effective);
+    public void takeDamage(int damage) {
+        currentHp = Math.max(0, currentHp - damage);
         if (currentHp == 0) alive = false;
     }
 
@@ -34,30 +33,33 @@ public abstract class Combatant {
         currentHp = Math.min(maxHp, currentHp + amount);
     }
 
-    public void addStatusEffect(StatusEffectBase effect) {
+     public void addStatusEffect(StatusEffect effect) {
         statusEffects.add(effect);
     }
 
     public void tickStatusEffects() {
-        for (StatusEffectBase e : List.copyOf(statusEffects)) {
+        for (StatusEffect e : List.copyOf(statusEffects)) {
             e.tick();
         }
         statusEffects.removeIf(e -> !e.isActive());
     }
-
+ 
     public boolean isStunned() {
-        return statusEffects.stream().anyMatch(e -> e.getEffectName().equals("Stun") && e.isActive());
+        return statusEffects.stream()
+            .anyMatch(e -> e.getEffectName().equals("Stun") && e.isActive());
     }
-
+ 
     public boolean isInvulnerable() {
-        return statusEffects.stream().anyMatch(e -> e.getEffectName().equals("SmokeBomb") && e.isActive());
+        return statusEffects.stream()
+            .anyMatch(e -> e.getEffectName().equals("SmokeBomb") && e.isActive());
     }
-
+ 
     public boolean isDefending() {
-        return statusEffects.stream().anyMatch(e -> e.getEffectName().equals("Defend") && e.isActive());
+        return statusEffects.stream()
+            .anyMatch(e -> e.getEffectName().equals("Defend") && e.isActive());
     }
-
-    public List<StatusEffectBase> getStatusEffects() { return List.copyOf(statusEffects); }
+ 
+    public List<StatusEffect> getStatusEffects() { return List.copyOf(statusEffects); }
 
     public String getName()       { return name; }
     public int getMaxHp()         { return maxHp; }
