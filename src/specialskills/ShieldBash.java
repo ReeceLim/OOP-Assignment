@@ -25,4 +25,7 @@ public class ShieldBash extends SpecialSkill {
         System.out.printf("  Shield Bash hits %s for %d damage! %s is STUNNED for 2 turns.%n",
             target.getName(), damage, target.getName());
     }
+
+    @Override
+    public boolean requiresTarget() { return true; }
 }

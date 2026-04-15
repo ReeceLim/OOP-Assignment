@@ -4,7 +4,6 @@ import base.Player;
 import base.Enemy;
 import base.SpecialSkill;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -20,7 +19,6 @@ public class ArcaneBlast extends SpecialSkill {
     public void execute(Player caster, List<Enemy> enemies) {
         List<Enemy> alive = enemies.stream()
             .filter(Enemy::isAlive)
-            .sorted(Comparator.comparingInt(Enemy::getDefense)) // lowest DEF first
             .toList();
         if (alive.isEmpty()) return;
 
@@ -32,7 +30,7 @@ public class ArcaneBlast extends SpecialSkill {
                 enemy.getName(), damage, enemy.getCurrentHp(), enemy.getMaxHp());
             if (!enemy.isAlive()) {
                 caster.setAttack(caster.getAttack() + 10);
-                System.out.printf("  %s eliminated! Wizard ATK +10 → %d.%n",
+                System.out.printf("  %s eliminated! Wizard ATK +10 -> %d.%n",
                     enemy.getName(), caster.getAttack());
             }
         }

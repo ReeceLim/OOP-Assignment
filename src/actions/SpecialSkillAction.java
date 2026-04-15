@@ -22,8 +22,10 @@ public class SpecialSkillAction implements ICombatAction {
             .map(e -> (Enemy) e)
             .collect(Collectors.toList());
         // Put selected target first so ShieldBash hits it; ArcaneBlast hits all anyway
-        living.remove(target);
-        living.add(0, target);
+        if (target != null) {
+            living.remove(target);
+            living.add(0, target);
+        }
         
         p.getSpecialSkill().execute(p, living);
         p.setSpecialCooldown(3);
