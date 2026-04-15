@@ -2,6 +2,7 @@ package base;
 
 import java.util.List;
 
-public interface TurnOrderStrategy {
+public interface TurnOrderStrategy
+{
     List<Combatant> determineOrder(List<Combatant> combatants);
 }

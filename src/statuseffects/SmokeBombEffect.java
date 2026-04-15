@@ -1,8 +1,8 @@
 package statuseffects;
  
-import base.StatusEffectBase;
+import base.StatusEffect;
  
-public class SmokeBombEffect implements StatusEffectBase {
+public class SmokeBombEffect implements StatusEffect {
     private int turnsRemaining = 2;
 
  

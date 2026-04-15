@@ -1,9 +1,9 @@
 package statuseffects;
 
 import base.Combatant;
-import base.StatusEffectBase;
+import base.StatusEffect;
 
-public class DefendEffect implements StatusEffectBase {
+public class DefendEffect implements StatusEffect {
     private int turnsRemaining = 2;
     private final Combatant target;
 
