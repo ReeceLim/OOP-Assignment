@@ -22,4 +22,5 @@ public class DefendEffect implements StatusEffectBase {
 
     @Override public boolean isActive()     { return turnsRemaining > 0; }
     @Override public String getEffectName() { return "Defend"; }
+    @Override public int getTurnsRemaining() { return turnsRemaining; }
 }

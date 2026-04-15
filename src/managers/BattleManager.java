@@ -16,12 +16,12 @@ public class BattleManager {
     private final List<Enemy> activeEnemies;
     private final List<Enemy> backupWave;
     private final TurnOrderStrategy turnOrderStrategy;
-    private final cli.GameCLI ui;
+    private final ui.BattleUI ui;
 
     private int currentRound = 0;
     private boolean backupSpawned = false;
 
-    public BattleManager(Player player, Level level, TurnOrderStrategy strategy, cli.GameCLI ui) {
+    public BattleManager(Player player, Level level, TurnOrderStrategy strategy, ui.BattleUI ui) {
         this.player = player;
         this.activeEnemies = new ArrayList<>(level.loadInitialWave());
         this.backupWave = new ArrayList<>(level.loadBackupWave());

@@ -1,22 +1,14 @@
 package statuseffects;
  
-import base.Combatant;
-import base.StatusEffect;
+import base.StatusEffectBase;
  
-public class SmokeBombEffect extends StatusEffect {
-    public SmokeBombEffect() {
-        super("SmokeBomb", 2);
-    }
+public class SmokeBombEffect implements StatusEffectBase {
+    private int turnsRemaining = 2;
+
  
-    @Override
-    public void apply(Combatant target) {
-        System.out.printf("  %s is shrouded in smoke! Enemy attacks deal 0 damage.%n",
-                target.getName());
-    }
- 
-    @Override
-    protected void onExpire(Combatant target) {
-        System.out.printf("  %s's Smoke Bomb has worn off.%n", target.getName());
-    }
+    @Override public void tick()            { if (turnsRemaining > 0) turnsRemaining--; }
+    @Override public boolean isActive()     { return turnsRemaining > 0; }
+    @Override public String getEffectName() { return "SmokeBomb"; }
+    @Override public int getTurnsRemaining() { return turnsRemaining; }
 }
  

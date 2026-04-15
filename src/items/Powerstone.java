@@ -17,8 +17,8 @@ public class Powerstone extends Item {
  
     public void useWithEnemies(Player user, List<Enemy> enemies) {
         System.out.printf("  %s used Power Stone! Special skill triggers for free.%n", user.getName());
-        int currentCooldown = user.getSpecialCooldown();
+        int savedCooldown = user.getSpecialCooldown();
         user.getSpecialSkill().execute(user, enemies);
-        user.setSpecialCooldown(currentCooldown);
+        user.setSpecialCooldown(savedCooldown + 1);
     }
 }

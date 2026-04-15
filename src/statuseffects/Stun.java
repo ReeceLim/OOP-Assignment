@@ -1,21 +1,28 @@
 package statuseffects;
-import base.Combatant;
-import base.StatusEffect;
+import base.StatusEffectBase;
 
 /** Prevents the affected entity from taking actions for a set number of turns. */
-public class Stun extends StatusEffect {
-    public Stun() {
-        super("Stun", 2);
+public class Stun implements StatusEffectBase {
+    private int turnsRemaining;
+ 
+    public Stun(int duration) {
+        this.turnsRemaining = duration;
     }
  
     @Override
-    public void apply(Combatant target) {
-        System.out.printf("  %s is STUNNED and cannot act!%n", target.getName());
+    public void tick() {
+        if (turnsRemaining > 0) turnsRemaining--;
     }
  
     @Override
-    protected void onExpire(Combatant target) {
-        System.out.printf("  %s's stun has expired.%n", target.getName());
+    public boolean isActive() {
+        return turnsRemaining > 0;
     }
+ 
+    @Override
+    public String getEffectName() { return "Stun"; }
+ 
+    @Override 
+    public int getTurnsRemaining() { return turnsRemaining; }
 }
 
