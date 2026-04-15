@@ -13,6 +13,7 @@ import java.util.Scanner;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+// make GameCLI implement BattleUI
 public class GameCLI implements BattleUI {
 
     private final Scanner sc = new Scanner(System.in);
