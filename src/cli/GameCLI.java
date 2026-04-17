@@ -67,13 +67,20 @@ public class GameCLI implements BattleUI {
         System.out.println("  [1] Potion");
         System.out.println("  [2] Smoke Bomb");
         System.out.println("  [3] Power Stone");
+        System.out.println("  [4] Strength Elixir");
         for (int i = 1; i <= 2; i++) {
         System.out.printf("Pick item %d: ", i);
-        int choice = readInt(1, 3);
+        int choice = readInt(1, 4);
         Item item;
-        if (choice == 1) item = new Potion();
-        else if (choice == 2) item = new SmokeBomb();
-        else item = new Powerstone();
+
+        switch (choice) {
+            case 1 -> item = new Potion();
+            case 2 -> item = new SmokeBomb();
+            case 3 -> item = new Powerstone();
+            case 4 -> item = new StrengthElixir();
+            default -> item = new Potion();
+        }
+
         player.addItem(item);
     }
         System.out.print("Items selected: ");
@@ -85,7 +92,7 @@ public class GameCLI implements BattleUI {
         System.out.println("\n--- Choose Difficulty ---");
         System.out.println("  [1] Easy   - 3 Goblins");
         System.out.println("  [2] Medium - 1 Goblin + 1 Wolf | Backup: 2 Wolves");
-        System.out.println("  [3] Hard   - 2 Goblins | Backup: 1 Goblin + 2 Wolves");
+        System.out.println("  [3] Hard   - 2 Goblins | Backup: 1 Goblin + 1 Wolf + 1 Troll");
         int choice = readInt(1, 3);
         Level.Difficulty diff = switch (choice) {
             case 1 -> Level.Difficulty.EASY;

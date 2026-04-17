@@ -71,3 +71,4 @@ public abstract class Combatant {
     public void setAttack(int v)  { attack = v; }
     public void setDefense(int v) { defense = v; }
 }
+
