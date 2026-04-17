@@ -1,8 +1,7 @@
 package managers;
 
 import base.Enemy;
-import enemytype.Goblin;
-import enemytype.Wolf;
+import enemytype.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class Level {
         return switch (difficulty) {
             case EASY   -> new ArrayList<>();
             case MEDIUM -> List.of(new Wolf("Wolf A"), new Wolf("Wolf B"));
-            case HARD   -> List.of(new Goblin("Goblin C"), new Wolf("Wolf A"), new Wolf("Wolf B"));
+            case HARD   -> List.of(new Goblin("Goblin C"), new Wolf("Wolf A"), new Troll("Troll A"));
         };
     }
 
