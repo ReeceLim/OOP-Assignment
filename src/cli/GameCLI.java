@@ -43,21 +43,31 @@ public class GameCLI implements BattleUI {
         System.out.println("      Special: Shield Bash - Deals damage and stuns target for 2 turns.");
         System.out.println("  [2] Wizard   - HP: 200 | ATK: 50 | DEF: 10 | SPD: 20");
         System.out.println("      Special: Arcane Blast - Hits all enemies. +10 ATK per kill.");
+        System.out.println("  [3] Rogue    - HP: 180 | ATK: 55 | DEF: 8  | SPD: 40");
+        System.out.println("      Special: Backstab - Double damage if target is above 50% HP, else normal.");
         System.out.println("\nENEMIES:");
         System.out.println("  Goblin - HP: 55 | ATK: 35 | DEF: 15 | SPD: 25");
         System.out.println("  Wolf   - HP: 40 | ATK: 45 | DEF: 5  | SPD: 35");
+        System.out.println("  Troll  - HP: 120| ATK: 30 | DEF: 25 | SPD: 10");
         System.out.println("\nITEMS:");
         System.out.println("  Potion     - Heal 100 HP");
         System.out.println("  Smoke Bomb - Block all damage for 2 turns");
         System.out.println("  Power Stone- Trigger special skill once, no cooldown change");
+        System.out.println("  Strength Elixir - ATK +20 for this turn and next");
     }
 
     public Player choosePlayer() {
         System.out.println("\n--- Choose Your Class ---");
         System.out.println("  [1] Warrior");
         System.out.println("  [2] Wizard");
-        int choice = readInt(1, 2);
-        Player p = choice == 1 ? new Warrior() : new Wizard();
+        System.out.println("  [3] Rogue");
+        int choice = readInt(1, 3);
+        Player p = switch (choice) {
+            case 1 -> new Warrior();
+            case 2 -> new Wizard();
+            case 3 -> new Rogue();
+            default -> new Warrior();
+        };
         System.out.printf("You chose: %s%n", p.getClassName());
         return p;
     }
@@ -97,7 +107,8 @@ public class GameCLI implements BattleUI {
         Level.Difficulty diff = switch (choice) {
             case 1 -> Level.Difficulty.EASY;
             case 2 -> Level.Difficulty.MEDIUM;
-            default -> Level.Difficulty.HARD;
+            case 3 -> Level.Difficulty.HARD;
+            default -> Level.Difficulty.EASY;
         };
         System.out.printf("Difficulty: %s%n", diff.name());
         return new Level(diff);
