@@ -13,8 +13,6 @@ Cooldown: 3 turns.
  */
 public class Backstab extends SpecialSkill {
 
-    private static final int COOLDOWN = 3;
-
     public Backstab() {
         super("Backstab");
     }
@@ -25,7 +23,7 @@ public class Backstab extends SpecialSkill {
     @Override
     public void execute(Player caster, List<Enemy> enemies) {
         if (enemies.isEmpty()) return;
-        Enemy target = enemies.get(0); // target pre-selected by GameCLI
+        Enemy target = enemies.get(0);
 
         int baseDamage = Math.max(0, caster.getAttack() - target.getDefense());
 
@@ -33,7 +31,7 @@ public class Backstab extends SpecialSkill {
             int damage = baseDamage * 2;
             target.takeDamage(damage);
             System.out.printf(
-                "  Backstab! %s is caught off-guard! %s strikes for DOUBLE damage: %d! (HP: %d/%d)%n",
+                "  Backstab! %s is above half HP! %s strikes for DOUBLE damage: %d! (HP: %d/%d)%n",
                 target.getName(), caster.getName(), damage, target.getCurrentHp(), target.getMaxHp());
         } else {
             target.takeDamage(baseDamage);
@@ -41,7 +39,5 @@ public class Backstab extends SpecialSkill {
             "  Backstab! %s is already wounded! %s deals normal damage: %d. (HP: %d/%d)%n",
             target.getName(), caster.getName(), baseDamage, target.getCurrentHp(), target.getMaxHp());
         }
-
-        caster.setSpecialCooldown(COOLDOWN);
     }
 }
